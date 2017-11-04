@@ -1,3 +1,6 @@
+// Only import fake file to generate it during build process
+import * as DHTSensorDriverFake from './dht-sensor-driver.fake';
+
 const isRasberryPi: boolean = require('detect-rpi')();
 
 let DHTSensorDriver;

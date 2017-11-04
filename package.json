@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "build": "tsc gardener.ts --outDir dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-babel-node gardener.ts"
+    "start-dev": "ts-babel-node gardener.ts",
+    "start": "node dist/gardener.js"
   },
   "author": "Alexandre Clément",
   "license": "ISC",

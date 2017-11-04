@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 const channelValues = new Map<number, boolean>();
 const eventEmitter = new EventEmitter();
 
-class GpioManagerFake {
+export class GpioManagerFake {
   static setup(channel: number, direction?: string, edge?: string, onSetup?: Function) {
     if (onSetup) {
       onSetup();
