@@ -22,7 +22,10 @@ var HumiditySensor = /** @class */ (function (_super) {
             var humidity = _this.currentHumidity$.getValue();
             callback(null, humidity);
         };
-        _this.shutdown = function () { };
+        _this.shutdown = function (callback) {
+            if (callback)
+                callback();
+        };
         _this._onValueChange = function (value) {
             _this.currentHumidity$.next(value.humidity);
         };

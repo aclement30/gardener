@@ -36,7 +36,9 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
     callback(null, moisture);
   }
 
-  shutdown = (): void => {}
+  shutdown = (callback?: Function): void => {
+    if (callback) callback();
+  }
 
   // Configure Homekit accessory
   _configureHomekit() {

@@ -32,7 +32,9 @@ export class HumiditySensor extends HAP.Accessory implements GardenAccessory {
     callback(null, humidity);
   }
 
-  shutdown = (): void => {}
+  shutdown = (callback?: Function): void => {
+    if (callback) callback();
+  }
 
   // Configure Homekit accessory
   private _configureHomekit() {

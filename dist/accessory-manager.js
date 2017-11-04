@@ -3,6 +3,7 @@ exports.__esModule = true;
 var BehaviorSubject_1 = require("rxjs/BehaviorSubject");
 var ReplaySubject_1 = require("rxjs/ReplaySubject");
 require("rxjs/add/operator/map");
+var async = require("async");
 var garden_monitor_1 = require("./garden-monitor");
 var AccessoryManager = /** @class */ (function () {
     function AccessoryManager() {
@@ -44,6 +45,12 @@ var AccessoryManager = /** @class */ (function () {
     };
     AccessoryManager.prototype.forEach = function (callback) {
         this._accessories.forEach(callback);
+    };
+    AccessoryManager.prototype.shutdownAll = function (callback) {
+        var accessories = Array.from(this._accessories.values());
+        async.each(accessories, function (accessory, callback) {
+            accessory.shutdown(callback);
+        }, callback);
     };
     Object.defineProperty(AccessoryManager.prototype, "count", {
         get: function () {

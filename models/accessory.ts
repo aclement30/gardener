@@ -1,4 +1,4 @@
 export interface GardenAccessory {
   name: string;
-  shutdown(): void;
+  shutdown(callback?: Function): void;
 }

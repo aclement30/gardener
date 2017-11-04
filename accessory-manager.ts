@@ -2,6 +2,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import * as async from 'async';
 
 import { GardenAccessory } from './models/accessory';
 import { GardenMonitor } from './garden-monitor';
@@ -59,6 +60,14 @@ export class AccessoryManager {
 
   forEach(callback) {
     this._accessories.forEach(callback);
+  }
+
+  shutdownAll(callback?: Function): void {
+    const accessories = Array.from(this._accessories.values());
+
+    async.each(accessories, (accessory: GardenAccessory, callback: Function) => {
+      accessory.shutdown(callback);
+    }, callback);
   }
 
   get count() {

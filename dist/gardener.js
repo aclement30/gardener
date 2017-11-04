@@ -4,6 +4,22 @@ var accessory_manager_1 = require("./accessory-manager");
 var homekit_bridge_1 = require("./homekit-bridge");
 var garden_monitor_1 = require("./garden-monitor");
 var gpio_manager_1 = require("./gpio/gpio-manager");
+// Register listeners for process shutdown
+process.on('uncaughtException', function (err) {
+    console.trace(err);
+    accessoryManager.shutdownAll(function () {
+        process.exit(1);
+    });
+    setTimeout(function () { process.exit(1); }, 1000);
+});
+process.on('exit', function () {
+    gpio_manager_1["default"].destroy();
+});
+process.on('SIGINT', function () {
+    accessoryManager.shutdownAll(function () {
+        process.exit(0);
+    });
+});
 // Controllers
 var lights_controller_1 = require("./controllers/lights.controller");
 // Init accessory manager
@@ -19,9 +35,3 @@ garden_monitor_1.GardenMonitor.announce(' 🚀  Gardener launched');
 var controllers = [
     new lights_controller_1.LightsController(accessoryManager),
 ];
-process.on('exit', function () {
-    accessoryManager.forEach(function (accessory) {
-        accessory.shutdown();
-    });
-    gpio_manager_1["default"].destroy();
-});

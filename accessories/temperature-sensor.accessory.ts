@@ -1,12 +1,13 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as HAP from 'hap-nodejs';
 
+import { GardenAccessory } from '../models/accessory';
 import { GardenMonitor, ACCESSORY_TAG } from '../garden-monitor';
 import { DHTSensorDevice, DHTSensorValue } from '../gpio/dht-sensor';
 
 export const namespace = 'gardener:accessories:temperature-sensor';
 
-export class TemperatureSensor extends HAP.Accessory {
+export class TemperatureSensor extends HAP.Accessory implements GardenAccessory {
 
   public name: string;
   public currentTemperature$: BehaviorSubject<number>;
@@ -31,7 +32,9 @@ export class TemperatureSensor extends HAP.Accessory {
     callback(null, temperature);
   }
 
-  shutdown = (): void => {}
+  shutdown = (callback?: Function): void => {
+    if (callback) callback();
+  }
 
   // Configure Homekit accessory
   _configureHomekit() {

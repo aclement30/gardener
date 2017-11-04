@@ -22,7 +22,10 @@ var TemperatureSensor = /** @class */ (function (_super) {
             var temperature = _this.currentTemperature$.getValue();
             callback(null, temperature);
         };
-        _this.shutdown = function () { };
+        _this.shutdown = function (callback) {
+            if (callback)
+                callback();
+        };
         _this._onValueChange = function (value) {
             _this.currentTemperature$.next(value.temperature);
         };

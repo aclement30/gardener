@@ -23,8 +23,9 @@ var Light = /** @class */ (function (_super) {
         _this._manualOverride = false;
         // Override to keep the light turned OFF (has priority over manual override)
         _this._emergencyOverride = false;
-        _this.shutdown = function () {
-            _this.turnOff(true);
+        _this.shutdown = function (callback) {
+            _this._gpioDevice.setValue(false, callback);
+            _this.power$.next(false);
         };
         // Homekit characteristics get/set
         _this._getAccessoryPower = function (callback) {
