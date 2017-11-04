@@ -20,25 +20,25 @@ export class LightsController {
   }
 
   handleLights = (lights: Map<string, Light>): void => {
-    const currentTime = this._getCurrentTime();
+    const currentTime = new Date();
+    const lightingUpTime = this._toDateTime(LIGHTS_CONFIG.lightingUpTime);
+    const lightingDownTime = this._toDateTime(LIGHTS_CONFIG.lightingDownTime);
 
-    if (currentTime >= LIGHTS_CONFIG.lightingUpTime) {
-      //console.log('TURNING LIGHTS ON');
-
+    if (currentTime >= lightingUpTime && currentTime < lightingDownTime) {
       lights.forEach((light: Light) => {
         if (!light.isOn && !light.hasOverride) light.turnOn(true);
       });
-    } else if (currentTime >= LIGHTS_CONFIG.lightingDownTime || currentTime < LIGHTS_CONFIG.lightingUpTime) {
-      //console.log('TURNING LIGHTS OFF');
-
+    } else {
       lights.forEach((light: Light) => {
         if (light.isOn && !light.hasOverride) light.turnOff(false);
       });
     }
   }
 
-  private _getCurrentTime(): string {
-    const date = new Date();
-    return date.toTimeString().substr(0, 5)
+  private _toDateTime(time: string): Date {
+    const today = new Date();
+    const splitTime = time.split(':');
+
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate(), +splitTime[0], +splitTime[1]);
   }
 }

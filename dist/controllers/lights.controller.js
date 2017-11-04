@@ -10,16 +10,16 @@ var LightsController = /** @class */ (function () {
         var _this = this;
         this.accessoryManager = accessoryManager;
         this.handleLights = function (lights) {
-            var currentTime = _this._getCurrentTime();
-            if (currentTime >= lights_1["default"].lightingUpTime) {
-                //console.log('TURNING LIGHTS ON');
+            var currentTime = new Date();
+            var lightingUpTime = _this._toDateTime(lights_1["default"].lightingUpTime);
+            var lightingDownTime = _this._toDateTime(lights_1["default"].lightingDownTime);
+            if (currentTime >= lightingUpTime && currentTime < lightingDownTime) {
                 lights.forEach(function (light) {
                     if (!light.isOn && !light.hasOverride)
                         light.turnOn(true);
                 });
             }
-            else if (currentTime >= lights_1["default"].lightingDownTime || currentTime < lights_1["default"].lightingUpTime) {
-                //console.log('TURNING LIGHTS OFF');
+            else {
                 lights.forEach(function (light) {
                     if (light.isOn && !light.hasOverride)
                         light.turnOff(false);
@@ -31,9 +31,10 @@ var LightsController = /** @class */ (function () {
         Observable_1.Observable.interval(3000).combineLatest(this.lights$, function (time, lights) { return (lights); })
             .subscribe(this.handleLights);
     }
-    LightsController.prototype._getCurrentTime = function () {
-        var date = new Date();
-        return date.toTimeString().substr(0, 5);
+    LightsController.prototype._toDateTime = function (time) {
+        var today = new Date();
+        var splitTime = time.split(':');
+        return new Date(today.getFullYear(), today.getMonth(), today.getDate(), +splitTime[0], +splitTime[1]);
     };
     return LightsController;
 }());
