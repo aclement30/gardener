@@ -19,8 +19,18 @@ var OutputDevice = /** @class */ (function (_super) {
         return _super.call(this, pinNumber, accessory, gpio_manager_1["default"].DIR_OUT) || this;
     }
     OutputDevice.prototype.setValue = function (value, callback) {
-        this._gpio.write(this._pinNumber, value, callback);
-        garden_monitor_1.GardenMonitor.info("Value set on pin #" + this._pinNumber + ": " + value, this._accessory, [garden_monitor_1.GPIO_TAG]);
+        var _this = this;
+        this._gpio.write(this._pinNumber, value, function (error) {
+            if (error) {
+                garden_monitor_1.GardenMonitor.warning("Error on pin #" + _this._pinNumber + ": " + error, _this._accessory, [garden_monitor_1.GPIO_TAG]);
+            }
+            else {
+                garden_monitor_1.GardenMonitor.info("Value set on pin #" + _this._pinNumber + ": " + value, _this._accessory, [garden_monitor_1.GPIO_TAG]);
+            }
+            if (callback)
+                callback(error);
+        });
+        return this;
     };
     return OutputDevice;
 }(gpio_device_1.GpioDevice));

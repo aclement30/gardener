@@ -9,9 +9,17 @@ export class OutputDevice extends GpioDevice {
     super(pinNumber, accessory, GPIO.DIR_OUT);
   }
 
-  setValue(value: boolean, callback?: Function): void {
-    this._gpio.write(this._pinNumber, value, callback);
+  setValue(value: boolean, callback?: Function): OutputDevice {
+    this._gpio.write(this._pinNumber, value, (error) => {
+      if (error) {
+        GardenMonitor.warning(`Error on pin #${this._pinNumber}: ${error}`, this._accessory, [GPIO_TAG]);
+      } else {
+        GardenMonitor.info(`Value set on pin #${this._pinNumber}: ${value}`, this._accessory, [GPIO_TAG]);
+      }
 
-    GardenMonitor.info(`Value set on pin #${this._pinNumber}: ${value}`, this._accessory, [GPIO_TAG]);
+      if (callback) callback(error);
+    });
+
+    return this;
   }
 }

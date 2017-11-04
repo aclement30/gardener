@@ -4,14 +4,21 @@ var gpio_manager_1 = require("../gpio/gpio-manager");
 var garden_monitor_1 = require("../garden-monitor");
 var GpioDevice = /** @class */ (function () {
     function GpioDevice(pinNumber, accessory, direction) {
-        var _this = this;
         this._gpio = gpio_manager_1["default"];
         this._pinNumber = pinNumber;
         this._accessory = accessory;
-        this._gpio.setup(this._pinNumber, direction, function () {
-            garden_monitor_1.GardenMonitor.warning("Could not setup GPIO device on pin #" + _this._pinNumber, _this._accessory, [garden_monitor_1.GPIO_TAG]);
-        });
+        this._direction = direction;
     }
+    GpioDevice.prototype.setup = function (callback) {
+        var _this = this;
+        gpio_manager_1["default"].setup(this._pinNumber, this._direction, function (error) {
+            if (error) {
+                garden_monitor_1.GardenMonitor.warning("Could not setup GPIO device on pin #" + _this._pinNumber + ": " + error, _this._accessory, [garden_monitor_1.GPIO_TAG]);
+            }
+            callback(error);
+        });
+        return this;
+    };
     return GpioDevice;
 }());
 exports.GpioDevice = GpioDevice;

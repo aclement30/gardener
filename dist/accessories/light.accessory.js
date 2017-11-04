@@ -36,9 +36,12 @@ var Light = /** @class */ (function (_super) {
         _this.power$ = new BehaviorSubject_1.BehaviorSubject(false);
         _this._configureHomekit();
         // Init GPIO device
-        _this._gpioDevice = new output_device_1.OutputDevice(pinNumber, _this);
-        _this.power$.subscribe(function (power) {
-            _this._gpioDevice.setValue(power);
+        _this._gpioDevice = new output_device_1.OutputDevice(pinNumber, _this).setup(function (error) {
+            if (error)
+                return;
+            _this.power$.subscribe(function (power) {
+                _this._gpioDevice.setValue(power);
+            });
         });
         return _this;
     }

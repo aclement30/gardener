@@ -27,10 +27,12 @@ export class Light extends HAP.Accessory implements GardenAccessory {
     this._configureHomekit();
 
     // Init GPIO device
-    this._gpioDevice = new OutputDevice(pinNumber, this);
+    this._gpioDevice = new OutputDevice(pinNumber, this).setup((error) => {
+      if (error) return;
 
-    this.power$.subscribe((power) => {
-      this._gpioDevice.setValue(power);
+      this.power$.subscribe((power) => {
+        this._gpioDevice.setValue(power);
+      });
     });
   }
 
