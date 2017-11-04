@@ -23,6 +23,7 @@ var MoistureSensor = /** @class */ (function (_super) {
             var moisture = _this.currentMoisture$.getValue();
             callback(null, moisture);
         };
+        _this.shutdown = function () { };
         _this._randomizeMoisture = function () {
             // randomize moisture to a value between 0 and 100
             var value = Math.round(Math.random() * 100);

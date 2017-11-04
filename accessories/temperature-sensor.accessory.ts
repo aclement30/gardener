@@ -31,6 +31,8 @@ export class TemperatureSensor extends HAP.Accessory {
     callback(null, temperature);
   }
 
+  shutdown = (): void => {}
+
   // Configure Homekit accessory
   _configureHomekit() {
     this

@@ -20,5 +20,8 @@ var controllers = [
     new lights_controller_1.LightsController(accessoryManager),
 ];
 process.on('exit', function () {
+    accessoryManager.forEach(function (accessory) {
+        accessory.shutdown();
+    });
     gpio_manager_1["default"].destroy();
 });

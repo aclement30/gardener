@@ -11,6 +11,7 @@ const accessoryManager = new AccessoryManager();
 
 // Load all accessories from config
 import accessoriesList from './config/accessories';
+import {GardenAccessory} from "./models/accessory";
 accessoryManager.loadFromConfig(accessoriesList);
 
 // Start Homekit bridge
@@ -25,5 +26,9 @@ const controllers = [
 ];
 
 process.on('exit', () => {
+  accessoryManager.forEach((accessory: GardenAccessory) => {
+    accessory.shutdown();
+  });
+
   GPIO.destroy();
 });

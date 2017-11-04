@@ -92,6 +92,10 @@ export class Light extends HAP.Accessory implements GardenAccessory {
     this._emergencyOverride = false;
   }
 
+  shutdown = (): void => {
+    this.turnOff(true);
+  }
+
   // Configure Homekit accessory
   private _configureHomekit() {
     this
