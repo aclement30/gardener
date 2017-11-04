@@ -4,12 +4,29 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-babel-node gardener.ts"
   },
   "author": "Alexandre Clément",
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "hap-nodejs": "^0.4.33"
+    "@types/event-emitter": "^0.3.2",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "colors": "^1.1.2",
+    "detect-rpi": "^1.2.0",
+    "hap-nodejs": "^0.4.33",
+    "node-dht-sensor": "^0.0.32",
+    "pad": "^2.0.1",
+    "rpi-gpio": "^0.9.1",
+    "rx-node": "^1.0.2",
+    "rxjs": "^5.5.2",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.47"
   }
 }
