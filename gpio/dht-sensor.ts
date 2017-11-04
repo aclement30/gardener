@@ -21,8 +21,11 @@ export class DHTSensorDevice {
     this._pinNumber = pinNumber;
     this._type = type;
 
-    // Read sensor value every 1 second
+    // Read sensor value every 60 seconds
     Observable.interval(readingInterval * 1000).subscribe(this._getSensorValue);
+
+    // Initial reading
+    this._getSensorValue();
   }
 
   private _getSensorValue = () => {
