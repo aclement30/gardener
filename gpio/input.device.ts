@@ -12,7 +12,7 @@ export class InputDevice extends GpioDevice {
   constructor(pinNumber: number, accessory: GardenAccessory) {
     super(pinNumber, accessory, GPIO.DIR_IN);
 
-    GPIO.on('change', this._onGpioValueChange);
+    this._gpio.on('change', this._onGpioValueChange);
   }
 
   private _onGpioValueChange = (channel: number, value: any) => {
