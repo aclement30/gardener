@@ -8,9 +8,9 @@ var dht_sensor_1 = require("../gpio/dht-sensor");
 var dhtSensorDevice = new dht_sensor_1.DHTSensorDevice(4, 3);
 exports["default"] = {
     'humidity': new humidity_sensor_accessory_1.HumiditySensor('Humidité globale', dhtSensorDevice),
-    'light-top': new light_accessory_1.Light('Lumière haut', 17),
-    'light-middle': new light_accessory_1.Light('Lumière milieu', 27),
-    'light-nursery': new light_accessory_1.Light('Lumière pouponnière', 22),
+    'light-top': new light_accessory_1.Light('Lumière haut', 11),
+    'light-middle': new light_accessory_1.Light('Lumière milieu', 13),
+    'light-nursery': new light_accessory_1.Light('Lumière pouponnière', 15),
     'temperature': new temperature_sensor_accessory_1.TemperatureSensor('Température', dhtSensorDevice),
     'moisture-1': new moisture_sensor_accessory_1.MoistureSensor('Hum. plante 1')
 };
