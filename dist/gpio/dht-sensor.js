@@ -7,7 +7,7 @@ var dht_sensor_driver_1 = require("../gpio/dht-sensor-driver");
 var garden_monitor_1 = require("../garden-monitor");
 var DHTSensorDevice = /** @class */ (function () {
     function DHTSensorDevice(pinNumber, readingInterval, type) {
-        if (readingInterval === void 0) { readingInterval = 5; }
+        if (readingInterval === void 0) { readingInterval = 60; }
         if (type === void 0) { type = 11; }
         var _this = this;
         this.value$ = new Subject_1.Subject();

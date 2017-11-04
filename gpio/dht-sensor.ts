@@ -17,7 +17,7 @@ export class DHTSensorDevice {
   protected _pinNumber: number;
   protected _type: 11 | 22;
 
-  constructor(pinNumber: number, readingInterval: number = 5, type: 11 | 22 = 11) {
+  constructor(pinNumber: number, readingInterval: number = 60, type: 11 | 22 = 11) {
     this._pinNumber = pinNumber;
     this._type = type;
 
