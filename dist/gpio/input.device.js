@@ -25,7 +25,7 @@ var InputDevice = /** @class */ (function (_super) {
             garden_monitor_1.GardenMonitor.info("Value received from pin #" + _this._pinNumber + ": " + value, _this._accessory, [garden_monitor_1.GPIO_TAG]);
             _this.value$.next(value);
         };
-        gpio_manager_1["default"].on('change', _this._onGpioValueChange);
+        _this._gpio.on('change', _this._onGpioValueChange);
         return _this;
     }
     return InputDevice;

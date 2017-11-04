@@ -10,7 +10,7 @@ export class OutputDevice extends GpioDevice {
   }
 
   setValue(value: boolean, callback?: Function): void {
-    GPIO.write(this._pinNumber, value, callback);
+    this._gpio.write(this._pinNumber, value, callback);
 
     GardenMonitor.info(`Value set on pin #${this._pinNumber}: ${value}`, this._accessory, [GPIO_TAG]);
   }

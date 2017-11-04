@@ -19,7 +19,7 @@ var OutputDevice = /** @class */ (function (_super) {
         return _super.call(this, pinNumber, accessory, gpio_manager_1["default"].DIR_OUT) || this;
     }
     OutputDevice.prototype.setValue = function (value, callback) {
-        gpio_manager_1["default"].write(this._pinNumber, value, callback);
+        this._gpio.write(this._pinNumber, value, callback);
         garden_monitor_1.GardenMonitor.info("Value set on pin #" + this._pinNumber + ": " + value, this._accessory, [garden_monitor_1.GPIO_TAG]);
     };
     return OutputDevice;
