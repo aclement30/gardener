@@ -32,8 +32,8 @@ var DHTSensorDevice = /** @class */ (function () {
         this._calibration = sensorOptions.calibration;
         // Read sensor value every 60 seconds
         Observable_1.Observable.interval(sensorOptions.readingInterval * 1000).subscribe(this._getSensorValue);
-        // Initial reading
-        this._getSensorValue();
+        // Initial reading (wait for next tick so accessory will be subscribed when initial value is pushed)
+        setTimeout(function () { _this._getSensorValue(); }, 0);
     }
     return DHTSensorDevice;
 }());

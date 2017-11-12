@@ -38,8 +38,8 @@ export class DHTSensorDevice {
     // Read sensor value every 60 seconds
     Observable.interval(sensorOptions.readingInterval * 1000).subscribe(this._getSensorValue);
 
-    // Initial reading
-    this._getSensorValue();
+    // Initial reading (wait for next tick so accessory will be subscribed when initial value is pushed)
+    setTimeout(() => { this._getSensorValue(); }, 0);
   }
 
   private _getSensorValue = () => {
