@@ -7,8 +7,8 @@ import { DHTSensorDevice } from "../gpio/dht-sensor";
 const dhtSensorDevice = new DHTSensorDevice(4, {
   readingInterval: 30,
   calibration: {
-    humidity: +4,
-    temperature: -2,
+    humidity: -4,
+    temperature: +2,
   }
 });
 

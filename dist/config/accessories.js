@@ -7,8 +7,8 @@ var dht_sensor_1 = require("../gpio/dht-sensor");
 var dhtSensorDevice = new dht_sensor_1.DHTSensorDevice(4, {
     readingInterval: 30,
     calibration: {
-        humidity: +4,
-        temperature: -2
+        humidity: -4,
+        temperature: +2
     }
 });
 exports["default"] = {
