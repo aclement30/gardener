@@ -4,7 +4,13 @@ import { TemperatureSensor } from '../accessories/temperature-sensor.accessory';
 import { MoistureSensor } from '../accessories/moisture-sensor.accessory';
 import { DHTSensorDevice } from "../gpio/dht-sensor";
 
-const dhtSensorDevice = new DHTSensorDevice(4, 30);
+const dhtSensorDevice = new DHTSensorDevice(4, {
+  readingInterval: 30,
+  calibration: {
+    humidity: +4,
+    temperature: -2,
+  }
+});
 
 export default {
   'humidity': new HumiditySensor('Humidité globale', dhtSensorDevice),

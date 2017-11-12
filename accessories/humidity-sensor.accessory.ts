@@ -3,7 +3,7 @@ import * as HAP from 'hap-nodejs';
 
 import { GardenAccessory } from '../models/accessory';
 import { GardenMonitor, ACCESSORY_TAG } from '../garden-monitor';
-import { DHTSensorDevice, DHTSensorValue } from '../gpio/dht-sensor';
+import { DHTSensorDevice, DHTSensorOptions, DHTSensorValue } from '../gpio/dht-sensor';
 
 export const namespace = 'gardener:accessories:humidity-sensor';
 

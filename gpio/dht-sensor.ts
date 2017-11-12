@@ -5,6 +5,12 @@ import 'rxjs/add/observable/interval';
 import DHTSensorDriver from '../gpio/dht-sensor-driver';
 import { GardenMonitor, GPIO_TAG } from '../garden-monitor';
 
+export interface DHTSensorOptions {
+  calibration?: { temperature?: number, humidity?: number };
+  readingInterval?: number;
+  type?: 11 | 22;
+}
+
 export interface DHTSensorValue {
   temperature: number;
   humidity: number;
@@ -16,13 +22,21 @@ export class DHTSensorDevice {
 
   protected _pinNumber: number;
   protected _type: 11 | 22;
+  protected _calibration: { temperature?: number, humidity?: number };
 
-  constructor(pinNumber: number, readingInterval: number = 60, type: 11 | 22 = 11) {
+  constructor(pinNumber: number, options: DHTSensorOptions = {}) {
+    const sensorOptions = Object.assign({}, {
+      calibration: { temperature: 0, humidity: 0 },
+      readingInterval: 60,
+      type: 11,
+    }, options);
+
     this._pinNumber = pinNumber;
-    this._type = type;
+    this._type = sensorOptions.type;
+    this._calibration = sensorOptions.calibration;
 
     // Read sensor value every 60 seconds
-    Observable.interval(readingInterval * 1000).subscribe(this._getSensorValue);
+    Observable.interval(sensorOptions.readingInterval * 1000).subscribe(this._getSensorValue);
 
     // Initial reading
     this._getSensorValue();
@@ -36,8 +50,8 @@ export class DHTSensorDevice {
       }
 
       this.value$.next({
-        temperature,
-        humidity,
+        temperature: temperature + this._calibration.temperature,
+        humidity: humidity + this._calibration.humidity,
       });
     });
   }

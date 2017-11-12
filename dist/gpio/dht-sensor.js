@@ -6,9 +6,8 @@ require("rxjs/add/observable/interval");
 var dht_sensor_driver_1 = require("../gpio/dht-sensor-driver");
 var garden_monitor_1 = require("../garden-monitor");
 var DHTSensorDevice = /** @class */ (function () {
-    function DHTSensorDevice(pinNumber, readingInterval, type) {
-        if (readingInterval === void 0) { readingInterval = 60; }
-        if (type === void 0) { type = 11; }
+    function DHTSensorDevice(pinNumber, options) {
+        if (options === void 0) { options = {}; }
         var _this = this;
         this.value$ = new Subject_1.Subject();
         this._getSensorValue = function () {
@@ -18,15 +17,21 @@ var DHTSensorDevice = /** @class */ (function () {
                     return;
                 }
                 _this.value$.next({
-                    temperature: temperature,
-                    humidity: humidity
+                    temperature: temperature + _this._calibration.temperature,
+                    humidity: humidity + _this._calibration.humidity
                 });
             });
         };
+        var sensorOptions = Object.assign({}, {
+            calibration: { temperature: 0, humidity: 0 },
+            readingInterval: 60,
+            type: 11
+        }, options);
         this._pinNumber = pinNumber;
-        this._type = type;
+        this._type = sensorOptions.type;
+        this._calibration = sensorOptions.calibration;
         // Read sensor value every 60 seconds
-        Observable_1.Observable.interval(readingInterval * 1000).subscribe(this._getSensorValue);
+        Observable_1.Observable.interval(sensorOptions.readingInterval * 1000).subscribe(this._getSensorValue);
         // Initial reading
         this._getSensorValue();
     }
