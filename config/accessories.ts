@@ -15,8 +15,8 @@ const dhtSensorDevice = new DHTSensorDevice(4, {
 export default {
   'humidity': new HumiditySensor('Humidité globale', dhtSensorDevice),
   'light-top': new Light('Lumière haut', 11),
-  'light-middle': new Light('Lumière milieu', 13),
-  'light-nursery': new Light('Lumière pouponnière', 15),
+  'light-bottom': new Light('Lumière bas', 13),
+  //'light-nursery': new Light('Lumière pouponnière', 15),
   'temperature': new TemperatureSensor('Température', dhtSensorDevice),
   //'moisture-1': new MoistureSensor('Hum. plante 1'),
 };

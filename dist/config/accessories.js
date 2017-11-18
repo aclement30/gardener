@@ -14,7 +14,7 @@ var dhtSensorDevice = new dht_sensor_1.DHTSensorDevice(4, {
 exports["default"] = {
     'humidity': new humidity_sensor_accessory_1.HumiditySensor('Humidité globale', dhtSensorDevice),
     'light-top': new light_accessory_1.Light('Lumière haut', 11),
-    'light-middle': new light_accessory_1.Light('Lumière milieu', 13),
-    'light-nursery': new light_accessory_1.Light('Lumière pouponnière', 15),
+    'light-bottom': new light_accessory_1.Light('Lumière bas', 13),
+    //'light-nursery': new Light('Lumière pouponnière', 15),
     'temperature': new temperature_sensor_accessory_1.TemperatureSensor('Température', dhtSensorDevice)
 };
