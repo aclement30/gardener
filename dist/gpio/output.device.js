@@ -16,7 +16,7 @@ var garden_monitor_1 = require("../garden-monitor");
 var OutputDevice = /** @class */ (function (_super) {
     __extends(OutputDevice, _super);
     function OutputDevice(pinNumber, accessory) {
-        return _super.call(this, pinNumber, accessory, gpio_manager_1["default"].DIR_OUT) || this;
+        return _super.call(this, pinNumber, accessory, gpio_manager_1["default"].DIR_LOW) || this;
     }
     OutputDevice.prototype.setValue = function (value, callback) {
         var _this = this;
