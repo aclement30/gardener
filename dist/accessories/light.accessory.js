@@ -44,7 +44,8 @@ var Light = /** @class */ (function (_super) {
             if (error)
                 return;
             _this.power$.subscribe(function (power) {
-                _this._gpioDevice.setValue(power);
+                // Send inverse of value because of the relay connected to the GPIO pin
+                _this._gpioDevice.setValue(!power);
             });
         });
         return _this;

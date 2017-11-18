@@ -6,7 +6,7 @@ import { GardenMonitor, GPIO_TAG } from '../garden-monitor';
 export class OutputDevice extends GpioDevice {
 
   constructor(pinNumber: number, accessory: GardenAccessory) {
-    super(pinNumber, accessory, GPIO.DIR_HIGH);
+    super(pinNumber, accessory, GPIO.DIR_OUT);
   }
 
   setValue(value: boolean, callback?: Function): OutputDevice {

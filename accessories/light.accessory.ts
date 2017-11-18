@@ -31,7 +31,8 @@ export class Light extends HAP.Accessory implements GardenAccessory {
       if (error) return;
 
       this.power$.subscribe((power) => {
-        this._gpioDevice.setValue(power);
+        // Send inverse of value because of the relay connected to the GPIO pin
+        this._gpioDevice.setValue(!power);
       });
     });
   }
