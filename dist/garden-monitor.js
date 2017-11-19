@@ -1,10 +1,10 @@
 "use strict";
 exports.__esModule = true;
 var sqlite3 = require("sqlite3");
-var DB_CONFIG = require("./config/database.js");
+var database_1 = require("./config/database");
 var colors = require("colors");
 var pad = require("pad");
-var database = new sqlite3.Database(DB_CONFIG.file);
+var database = new sqlite3.Database(database_1["default"].file);
 var LOG_TYPE;
 (function (LOG_TYPE) {
     LOG_TYPE["START"] = "START";

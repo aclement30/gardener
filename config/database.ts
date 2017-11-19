@@ -1,3 +1,3 @@
-module.exports = {
+export default {
   file: 'db.sqlite3',
 }

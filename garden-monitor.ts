@@ -1,6 +1,6 @@
 import * as sqlite3 from 'sqlite3';
 
-import * as DB_CONFIG from './config/database.js';
+import DB_CONFIG from './config/database';
 import * as colors from 'colors';
 import * as pad from 'pad';
 import { GardenAccessory } from './models/accessory';
