@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/interval';
 
 import DHTSensorDriver from '../gpio/dht-sensor-driver';
-import { GardenMonitor, GPIO_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 
 export interface DHTSensorOptions {
   calibration?: { temperature?: number, humidity?: number };
@@ -45,7 +45,7 @@ export class DHTSensorDevice {
   private _getSensorValue = () => {
     DHTSensorDriver.read(this._type, this._pinNumber, (error, temperature, humidity) => {
       if (error) {
-        GardenMonitor.log(`⚠️  Cannot read DHT sensor value on pin #${this._pinNumber}`, null, [GPIO_TAG]);
+        GardenMonitor.warning(LOG_TYPE.READ_ERROR, `DHT sensor reading error on pin #${this._pinNumber}`)
         return;
       }
 

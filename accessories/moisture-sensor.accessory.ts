@@ -2,13 +2,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as HAP from 'hap-nodejs';
 
 import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, ACCESSORY_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 import { InputDevice } from '../gpio/input.device';
 
 export const namespace = 'gardener:accessories:moisture-sensor';
 
 export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
 
+  public id: number;
   public name: string;
   public currentMoisture$: BehaviorSubject<number>;
 
@@ -48,8 +49,6 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
       .on('get', this.getMoisture);
 
     this.currentMoisture$.subscribe((currentMoisture) => {
-      GardenMonitor.info(`Moisture: ${currentMoisture}%`, this, [ACCESSORY_TAG]);
-
       // Update the characteristic value so interested iOS devices can get notified
       this
         .getService(HAP.Service.HumiditySensor)
@@ -65,5 +64,6 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
 
   private _onValueChange = (value: number): void => {
     this.currentMoisture$.next(value);
+    if (this.id) GardenMonitor.info(LOG_TYPE.READING, value, this, `Moisture: ${value}%`);
   }
 }

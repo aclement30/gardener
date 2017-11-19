@@ -1,6 +1,6 @@
 import GPIO from '../gpio/gpio-manager';
 import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, GPIO_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 
 export class GpioDevice {
 
@@ -19,7 +19,7 @@ export class GpioDevice {
   setup(callback: Function): any {
     GPIO.setup(this._pinNumber, this._direction, (error) => {
       if (error) {
-        GardenMonitor.warning(`Could not setup GPIO device on pin #${this._pinNumber}: ${error}`, this._accessory, [GPIO_TAG]);
+        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `GPIO device setup error on pin #${this._pinNumber} ${error}`, this._accessory);
       }
 
       callback(error);

@@ -6,6 +6,7 @@ export const namespace = 'gardener:accessories:water-pump';
 
 export class WaterPump extends HAP.Accessory {
 
+  public id: number;
   public name: string;
   public pinNumber: number;
   public power$: BehaviorSubject<boolean>;

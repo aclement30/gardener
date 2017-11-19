@@ -46,3 +46,6 @@ node_modules/
 
 persist/
 .DS_Store
+
+# Sqlite3 db
+db.sqlite3

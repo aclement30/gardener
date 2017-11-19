@@ -1,37 +1,100 @@
+import * as sqlite3 from 'sqlite3';
+
+import * as DB_CONFIG from './config/database.js';
 import * as colors from 'colors';
 import * as pad from 'pad';
-
 import { GardenAccessory } from './models/accessory';
 
+const database = new sqlite3.Database(DB_CONFIG.file);
+
+export enum LOG_TYPE {
+  START = 'START',
+  STOP = 'STOP',
+  TURN_ON = 'TURN_ON',
+  TURN_OFF = 'TURN_OFF',
+  OVERRIDE = 'OVERRIDE',
+  READING = 'READING',
+  HOMEKIT_START = 'HOMEKIT_START',
+  READ_ERROR = 'READ_ERROR',
+  WRITE_ERROR = 'WRITE_ERROR',
+  DB_ERROR = 'DB_ERROR',
+  SETUP_ERROR = 'SETUP_ERROR',
+  SHUTDOWN = 'SHUTDOWN',
+  EMERGENCY_SHUTDOWN = 'SHUTDOWN',
+};
+
 export class GardenMonitor {
-  static log(message: string, accessory?: GardenAccessory, tags?: [string]) {
-    console.log(message);
+  static info(type: LOG_TYPE, value: any, accessory: GardenAccessory = null, message: string = null) {
+    GardenMonitor.log(type, value, accessory);
+
+    if (message) GardenMonitor.debug(message, accessory);
   }
 
-  static info(message: string, accessory?: GardenAccessory, tags?: [string]) {
+  static notice(message: string) {
+    GardenMonitor.debug(colors.yellow(message));
+  }
+
+  static announce(type: LOG_TYPE, message: string, callback?: (error: any) => void) {
+    GardenMonitor.log(type, null, null, callback);
+
+    let color = 'green';
+    if (type === LOG_TYPE.STOP || type === LOG_TYPE.SHUTDOWN) {
+      color = 'red';
+    }
+
+    GardenMonitor.debug(colors[color](message));
+  }
+
+  static warning(type: LOG_TYPE, message: string, accessory: GardenAccessory = null, value: any = null) {
+    GardenMonitor.log(type, value, accessory);
+    GardenMonitor.debug('⚠️  ' + message, accessory);
+  }
+
+  static emergency(type: LOG_TYPE, message: string, accessory: GardenAccessory = null, value: any = null) {
+    GardenMonitor.log(type, value, accessory);
+    GardenMonitor.debug('🚨  ' + message, accessory);
+  }
+
+  static registerAccessory(alias: string, callback: (error: boolean, id?: number) => void) {
+    database.get('SELECT * FROM accessories WHERE alias = ?', alias, (error, row) => {
+      if (row) {
+        callback(error, row.id);
+      } else {
+        database.run('INSERT INTO accessories VALUES (null, ?)', [alias], function(error) {
+          if (error) {
+            GardenMonitor.warning(LOG_TYPE.DB_ERROR, `DB registration error for accessory ${alias}: ${error}`);
+            callback(true);
+          }
+
+          callback(false, this.lastID);
+        });
+      }
+    });
+  }
+
+  static log(type: LOG_TYPE, value: number = null, accessory: GardenAccessory = null, callback?: (error: any) => void) {
+    const date = new Date();
+    const timestamp = Math.floor(Date.now() / 1000);
+    const datetime = date.toLocaleString();
+
+    database.run('INSERT INTO logs (id, accessory_id, type, value, timestamp, created_at) VALUES (null, ?, ?, ?, ?, ?)', [accessory ? accessory.id : null, type, value, timestamp, datetime], function(error) {
+      if (error) {
+        GardenMonitor.warning(LOG_TYPE.DB_ERROR, `DB save error: ${error}`, accessory);
+      }
+
+      if (callback) callback(error);
+    });
+  }
+
+  static closeDatabase() {
+    database.close();
+  }
+
+  static debug(message: string, accessory: GardenAccessory = null) {
     if (accessory) {
-      console.log(pad(`[INFO] (${accessory.name})`, 32) + message);
+      console.log(pad(`[${accessory.name}]`, 32) + message);
     } else {
       console.log(`${message}`);
     }
   }
-
-  static notice(message: string, accessory?: GardenAccessory, tags?: [string]) {
-    GardenMonitor.log(colors.yellow(message), accessory, tags);
-  }
-
-  static announce(message: string, tags?: [string]) {
-    GardenMonitor.log(colors.green(message));
-  }
-
-  static warning(message: string, accessory?: GardenAccessory, tags?: [string]) {
-    GardenMonitor.log('⚠️  ' + message, accessory, tags);
-  }
-
-  static emergency(message: string, accessory?: GardenAccessory, tags?: [string]) {
-    GardenMonitor.log('🚨  ' + message, accessory, tags);
-  }
 }
-
-export const GPIO_TAG = 'GPIO';
-export const ACCESSORY_TAG = 'ACCESSORY';

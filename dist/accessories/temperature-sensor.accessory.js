@@ -28,6 +28,8 @@ var TemperatureSensor = /** @class */ (function (_super) {
         };
         _this._onValueChange = function (value) {
             _this.currentTemperature$.next(value.temperature);
+            if (_this.id)
+                garden_monitor_1.GardenMonitor.info(garden_monitor_1.LOG_TYPE.READING, value.temperature, _this, "Temperature: " + value.temperature + "\u00B0C");
         };
         _this.name = name;
         _this.currentTemperature$ = new BehaviorSubject_1.BehaviorSubject(0);
@@ -45,7 +47,6 @@ var TemperatureSensor = /** @class */ (function (_super) {
             .getCharacteristic(HAP.Characteristic.CurrentTemperature)
             .on('get', this.getTemperature);
         this.currentTemperature$.subscribe(function (temperature) {
-            garden_monitor_1.GardenMonitor.info("Temperature: " + temperature + "\u00B0C", _this, [garden_monitor_1.ACCESSORY_TAG]);
             // Update the characteristic value so interested iOS devices can get notified
             _this
                 .getService(HAP.Service.TemperatureSensor)

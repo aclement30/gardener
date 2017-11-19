@@ -24,7 +24,12 @@ var AccessoryManager = /** @class */ (function () {
             return;
         this._accessories.set(alias, accessory);
         this.accessoryAdded$.next(accessory);
-        garden_monitor_1.GardenMonitor.notice("+ " + accessory.name);
+        garden_monitor_1.GardenMonitor.registerAccessory(alias, function (error, accessoryId) {
+            if (!error) {
+                accessory.id = accessoryId;
+                garden_monitor_1.GardenMonitor.notice("+ " + accessory.name);
+            }
+        });
     };
     AccessoryManager.prototype.removeAccessory = function (alias) {
         this._accessories["delete"](alias);

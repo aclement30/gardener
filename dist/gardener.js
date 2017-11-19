@@ -7,17 +7,22 @@ var gpio_manager_1 = require("./gpio/gpio-manager");
 // Register listeners for process shutdown
 process.on('uncaughtException', function (err) {
     console.trace(err);
+    garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.SHUTDOWN, ' ❗️  Gardener shutdown with error');
     accessoryManager.shutdownAll(function () {
         process.exit(1);
     });
     setTimeout(function () { process.exit(1); }, 1000);
 });
 process.on('exit', function () {
+    garden_monitor_1.GardenMonitor.closeDatabase();
     gpio_manager_1["default"].destroy();
 });
 process.on('SIGINT', function () {
-    accessoryManager.shutdownAll(function () {
-        process.exit(0);
+    garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.STOP, ' 🛑  Gardener stopped', function () {
+        garden_monitor_1.GardenMonitor.closeDatabase();
+        accessoryManager.shutdownAll(function () {
+            process.exit(0);
+        });
     });
 });
 // Controllers
@@ -30,7 +35,7 @@ accessoryManager.loadFromConfig(accessories_1["default"]);
 // Start Homekit bridge
 var homekitBridge = new homekit_bridge_1.HomekitBridge(accessoryManager);
 homekitBridge.publish();
-garden_monitor_1.GardenMonitor.announce(' 🚀  Gardener launched');
+garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.START, ' 🚀  Gardener launched');
 // Start controllers
 var controllers = [
     new lights_controller_1.LightsController(accessoryManager),

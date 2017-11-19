@@ -2,13 +2,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as HAP from 'hap-nodejs';
 
 import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, ACCESSORY_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 import { OutputDevice } from '../gpio/output.device';
 
 export const namespace = 'gardener:accessories:light';
 
 export class Light extends HAP.Accessory implements GardenAccessory {
 
+  public id: number;
   public name: string;
   public power$: BehaviorSubject<boolean>;
 
@@ -40,7 +41,7 @@ export class Light extends HAP.Accessory implements GardenAccessory {
   setPower(status: boolean, automated: boolean = true, callback?: Function): void {
     // Skip if emergency override is activated
     if (this._emergencyOverride) {
-      GardenMonitor.warning(`Emergency override preventing light to be turned ${status ? 'on' : 'off'}`, this, [ACCESSORY_TAG]);
+      GardenMonitor.warning(LOG_TYPE.OVERRIDE, `Emergency override preventing light to be turned ${status ? 'on' : 'off'}`, this);
 
       if (callback) callback(true);
       return;
@@ -48,13 +49,13 @@ export class Light extends HAP.Accessory implements GardenAccessory {
 
     // Skip automated change when manual override is activated
     if (automated && this._manualOverride) {
-      GardenMonitor.warning(`Manual override preventing light to be turned ${status ? 'on' : 'off'}`, this, [ACCESSORY_TAG]);
+      GardenMonitor.warning(LOG_TYPE.OVERRIDE, `Manual override preventing light to be turned ${status ? 'on' : 'off'}`, this);
 
       if (callback) callback(true);
       return;
     }
 
-    GardenMonitor.info(`Turning the light ${status ? 'on' : 'off'} (${automated ? 'auto' : 'manual'})`, this, [ACCESSORY_TAG]);
+    if (this.id) GardenMonitor.info(status ? LOG_TYPE.TURN_ON : LOG_TYPE.TURN_OFF, status, this, `Turning the light ${status ? 'on' : 'off'} (${automated ? 'auto' : 'manual'})`);
 
     this.power$.next(status);
 
@@ -82,7 +83,7 @@ export class Light extends HAP.Accessory implements GardenAccessory {
   // Immediately shutdown the light and prevent it from turning ON again
   // until the emergency override is disabled
   emergencyShutdown() {
-    GardenMonitor.emergency('Emergency shutdown', this);
+    GardenMonitor.emergency(LOG_TYPE.EMERGENCY_SHUTDOWN, 'Emergency shutdown', this);
 
     this.power$.next(false);
     this._emergencyOverride = true;

@@ -2,13 +2,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as HAP from 'hap-nodejs';
 
 import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, ACCESSORY_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 import { DHTSensorDevice, DHTSensorValue } from '../gpio/dht-sensor';
 
 export const namespace = 'gardener:accessories:temperature-sensor';
 
 export class TemperatureSensor extends HAP.Accessory implements GardenAccessory {
 
+  public id: number;
   public name: string;
   public currentTemperature$: BehaviorSubject<number>;
 
@@ -44,8 +45,6 @@ export class TemperatureSensor extends HAP.Accessory implements GardenAccessory 
       .on('get', this.getTemperature);
 
     this.currentTemperature$.subscribe((temperature) => {
-      GardenMonitor.info(`Temperature: ${temperature}°C`, this, [ACCESSORY_TAG]);
-
       // Update the characteristic value so interested iOS devices can get notified
       this
         .getService(HAP.Service.TemperatureSensor)
@@ -55,5 +54,6 @@ export class TemperatureSensor extends HAP.Accessory implements GardenAccessory 
 
   private _onValueChange = (value: DHTSensorValue): void => {
     this.currentTemperature$.next(value.temperature);
+    if (this.id) GardenMonitor.info(LOG_TYPE.READING, value.temperature, this, `Temperature: ${value.temperature}°C`);
   }
 }

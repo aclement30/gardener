@@ -13,7 +13,7 @@ var DHTSensorDevice = /** @class */ (function () {
         this._getSensorValue = function () {
             dht_sensor_driver_1["default"].read(_this._type, _this._pinNumber, function (error, temperature, humidity) {
                 if (error) {
-                    garden_monitor_1.GardenMonitor.log("\u26A0\uFE0F  Cannot read DHT sensor value on pin #" + _this._pinNumber, null, [garden_monitor_1.GPIO_TAG]);
+                    garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.READ_ERROR, "DHT sensor reading error on pin #" + _this._pinNumber);
                     return;
                 }
                 _this.value$.next({

@@ -1,12 +1,14 @@
 import { AccessoryManager } from './accessory-manager';
 import { HomekitBridge } from './homekit-bridge';
-import { GardenMonitor } from './garden-monitor';
+import { GardenMonitor, LOG_TYPE } from './garden-monitor';
 import GPIO from './gpio/gpio-manager';
 
 // Register listeners for process shutdown
 
 process.on('uncaughtException', (err) => {
   console.trace(err);
+
+  GardenMonitor.announce(LOG_TYPE.SHUTDOWN, ' ❗️  Gardener shutdown with error');
 
   accessoryManager.shutdownAll(() => {
     process.exit (1);
@@ -16,12 +18,16 @@ process.on('uncaughtException', (err) => {
 });
 
 process.on('exit', () => {
+  GardenMonitor.closeDatabase();
   GPIO.destroy();
 });
 
 process.on ('SIGINT', () => {
-  accessoryManager.shutdownAll(() => {
-    process.exit (0);
+  GardenMonitor.announce(LOG_TYPE.STOP, ' 🛑  Gardener stopped', () => {
+    GardenMonitor.closeDatabase();
+    accessoryManager.shutdownAll(() => {
+      process.exit (0);
+    });
   });
 });
 
@@ -39,7 +45,7 @@ accessoryManager.loadFromConfig(accessoriesList);
 const homekitBridge = new HomekitBridge(accessoryManager);
 homekitBridge.publish();
 
-GardenMonitor.announce(' 🚀  Gardener launched');
+GardenMonitor.announce(LOG_TYPE.START, ' 🚀  Gardener launched');
 
 // Start controllers
 const controllers = [

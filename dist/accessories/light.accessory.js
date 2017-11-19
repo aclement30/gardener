@@ -54,19 +54,20 @@ var Light = /** @class */ (function (_super) {
         if (automated === void 0) { automated = true; }
         // Skip if emergency override is activated
         if (this._emergencyOverride) {
-            garden_monitor_1.GardenMonitor.warning("Emergency override preventing light to be turned " + (status ? 'on' : 'off'), this, [garden_monitor_1.ACCESSORY_TAG]);
+            garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.OVERRIDE, "Emergency override preventing light to be turned " + (status ? 'on' : 'off'), this);
             if (callback)
                 callback(true);
             return;
         }
         // Skip automated change when manual override is activated
         if (automated && this._manualOverride) {
-            garden_monitor_1.GardenMonitor.warning("Manual override preventing light to be turned " + (status ? 'on' : 'off'), this, [garden_monitor_1.ACCESSORY_TAG]);
+            garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.OVERRIDE, "Manual override preventing light to be turned " + (status ? 'on' : 'off'), this);
             if (callback)
                 callback(true);
             return;
         }
-        garden_monitor_1.GardenMonitor.info("Turning the light " + (status ? 'on' : 'off') + " (" + (automated ? 'auto' : 'manual') + ")", this, [garden_monitor_1.ACCESSORY_TAG]);
+        if (this.id)
+            garden_monitor_1.GardenMonitor.info(status ? garden_monitor_1.LOG_TYPE.TURN_ON : garden_monitor_1.LOG_TYPE.TURN_OFF, status, this, "Turning the light " + (status ? 'on' : 'off') + " (" + (automated ? 'auto' : 'manual') + ")");
         this.power$.next(status);
         if (callback)
             callback();
@@ -97,7 +98,7 @@ var Light = /** @class */ (function (_super) {
     // Immediately shutdown the light and prevent it from turning ON again
     // until the emergency override is disabled
     Light.prototype.emergencyShutdown = function () {
-        garden_monitor_1.GardenMonitor.emergency('Emergency shutdown', this);
+        garden_monitor_1.GardenMonitor.emergency(garden_monitor_1.LOG_TYPE.EMERGENCY_SHUTDOWN, 'Emergency shutdown', this);
         this.power$.next(false);
         this._emergencyOverride = true;
     };

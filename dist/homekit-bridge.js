@@ -37,7 +37,7 @@ var HomekitBridge = /** @class */ (function (_super) {
             pincode: "031-45-154",
             category: Accessory.Categories.BRIDGE
         });
-        garden_monitor_1.GardenMonitor.announce('Garden accessory bridge is now public on local network');
+        garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.HOMEKIT_START, 'Garden accessory bridge is now public on local network');
     };
     return HomekitBridge;
 }(Bridge));

@@ -22,10 +22,7 @@ var OutputDevice = /** @class */ (function (_super) {
         var _this = this;
         this._gpio.write(this._pinNumber, value, function (error) {
             if (error) {
-                garden_monitor_1.GardenMonitor.warning("Error on pin #" + _this._pinNumber + ": " + error, _this._accessory, [garden_monitor_1.GPIO_TAG]);
-            }
-            else {
-                garden_monitor_1.GardenMonitor.info("Value set on pin #" + _this._pinNumber + ": " + value, _this._accessory, [garden_monitor_1.GPIO_TAG]);
+                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.WRITE_ERROR, "Error on pin #" + _this._pinNumber + ": " + error, _this._accessory);
             }
             if (callback)
                 callback(error);

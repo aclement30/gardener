@@ -1,7 +1,7 @@
 import GPIO from '../gpio/gpio-manager';
 import { GpioDevice } from './gpio.device';
 import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, GPIO_TAG } from '../garden-monitor';
+import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 
 export class OutputDevice extends GpioDevice {
 
@@ -12,9 +12,7 @@ export class OutputDevice extends GpioDevice {
   setValue(value: boolean, callback?: Function): OutputDevice {
     this._gpio.write(this._pinNumber, value, (error) => {
       if (error) {
-        GardenMonitor.warning(`Error on pin #${this._pinNumber}: ${error}`, this._accessory, [GPIO_TAG]);
-      } else {
-        GardenMonitor.info(`Value set on pin #${this._pinNumber}: ${value}`, this._accessory, [GPIO_TAG]);
+        GardenMonitor.warning(LOG_TYPE.WRITE_ERROR, `Error on pin #${this._pinNumber}: ${error}`, this._accessory);
       }
 
       if (callback) callback(error);

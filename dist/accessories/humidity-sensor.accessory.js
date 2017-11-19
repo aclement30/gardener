@@ -28,6 +28,8 @@ var HumiditySensor = /** @class */ (function (_super) {
         };
         _this._onValueChange = function (value) {
             _this.currentHumidity$.next(value.humidity);
+            if (_this.id)
+                garden_monitor_1.GardenMonitor.info(garden_monitor_1.LOG_TYPE.READING, value.humidity, _this, "Humidity: " + value.humidity + "%");
         };
         _this.name = name;
         _this.currentHumidity$ = new BehaviorSubject_1.BehaviorSubject(0);
@@ -45,7 +47,6 @@ var HumiditySensor = /** @class */ (function (_super) {
             .getCharacteristic(HAP.Characteristic.CurrentRelativeHumidity)
             .on('get', this.getHumidity);
         this.currentHumidity$.subscribe(function (currentHumidity) {
-            garden_monitor_1.GardenMonitor.info("Humidity: " + currentHumidity + "%", _this, [garden_monitor_1.ACCESSORY_TAG]);
             // Update the characteristic value so interested iOS devices can get notified
             _this
                 .getService(HAP.Service.HumiditySensor)

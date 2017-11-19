@@ -1,7 +1,7 @@
 import * as storage from 'node-persist';
 import * as HAP from 'hap-nodejs';
 import { AccessoryManager } from './accessory-manager';
-import { GardenMonitor } from './garden-monitor';
+import { GardenMonitor, LOG_TYPE } from './garden-monitor';
 
 const Accessory = HAP.Accessory;
 const Bridge = HAP.Bridge;
@@ -30,7 +30,7 @@ export class HomekitBridge extends Bridge {
       category: Accessory.Categories.BRIDGE,
     })
 
-    GardenMonitor.announce('Garden accessory bridge is now public on local network')
+    GardenMonitor.announce(LOG_TYPE.HOMEKIT_START, 'Garden accessory bridge is now public on local network');
   }
 
   _onAccessoryAdded = (accessory) => {

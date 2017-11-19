@@ -35,7 +35,12 @@ export class AccessoryManager {
     this._accessories.set(alias, accessory);
     this.accessoryAdded$.next(accessory);
 
-    GardenMonitor.notice(`+ ${accessory.name}`);
+    GardenMonitor.registerAccessory(alias, (error, accessoryId) => {
+      if (!error) {
+        accessory.id = accessoryId;
+        GardenMonitor.notice(`+ ${accessory.name}`);
+      }
+    });
   }
 
   removeAccessory(alias: string) {
