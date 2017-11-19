@@ -73,6 +73,8 @@ export class GardenMonitor {
   }
 
   static log(type: LOG_TYPE, value: number = null, accessory: GardenAccessory = null, callback?: (error: any) => void) {
+    if (type === LOG_TYPE.DB_ERROR) return;
+
     const date = new Date();
     const timestamp = Math.floor(Date.now() / 1000);
     const datetime = date.toLocaleString();

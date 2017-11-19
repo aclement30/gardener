@@ -74,6 +74,8 @@ var GardenMonitor = /** @class */ (function () {
     GardenMonitor.log = function (type, value, accessory, callback) {
         if (value === void 0) { value = null; }
         if (accessory === void 0) { accessory = null; }
+        if (type === LOG_TYPE.DB_ERROR)
+            return;
         var date = new Date();
         var timestamp = Math.floor(Date.now() / 1000);
         var datetime = date.toLocaleString();
