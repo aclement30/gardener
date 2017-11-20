@@ -4,7 +4,7 @@ const async = require("async");
 
 class DashbordController {
   constructor(app) {
-    this.database = new sqlite3.Database('../db.sqlite3');
+    this.database = new sqlite3.Database('../db.sqlite3', sqlite3.OPEN_READONLY);
 
     app.get('/', this.dashboard.bind(this));
   }
