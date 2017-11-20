@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <title>Gardener</title>
+  <meta name="description" content="">
+  <meta name="author" content="Alexandre Clément">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Javascript
+ –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="vendors/chart.bundle.min.js"></script>
+
+  <script>
+    var gardenData = {
+      range: '<%= range %>',
+      logs: <%- JSON.stringify(logs) %>,
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="header">
+        <h3>Tableau de bord</h3>
+
+        <div class="period-buttons">
+          <a href="?range=6m" class="button<% if (range === '6m') { %> button-primary<% } %>">6 mois</a>
+          <a href="?range=3m" class="button<% if (range === '3m') { %> button-primary<% } %>">3 mois</a>
+          <a href="?range=30d" class="button<% if (range === '30d') { %> button-primary<% } %>">30 jours</a>
+          <a href="?range=7d" class="button<% if (range === '7d') { %> button-primary<% } %>">7 jours</a>
+          <a href="?range=24h" class="button<% if (range === '24h') { %> button-primary<% } %>">24 heures</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container card">
+    <div class="row">
+      <div class="content">
+        <h5>Climat</h5>
+        <canvas id="climate-chart" width="800" height="400"></canvas>
+        <div class="legend">
+          <div class="humidity">Humidité (%)</div>
+          <div class="temperature">Température (°C)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container card">
+    <div class="row">
+      <div class="content">
+        <h5>Erreurs</h5>
+        <canvas id="error-chart" width="800" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/client.js"></script>
+  <script>
+    const gardenerClient = new GardenerClient();
+    gardenerClient.init();
+    gardenerClient.buildCharts();
+  </script>
+</body>
+</html>

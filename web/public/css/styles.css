@@ -1,0 +1,89 @@
+body {
+    background-color: #f5f7fa;
+}
+
+.container.card {
+    margin-bottom: 30px;
+}
+
+.content {
+    background-color: white;
+}
+
+.row > .content {
+    padding: 20px;
+    border-radius: 3px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+.period-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.period-buttons a {
+    margin-left: 10px;
+    padding: 0 10px;
+    height: 28px;
+    line-height: 28px;
+}
+
+.period-buttons a.button-primary {
+    pointer-events: none;
+    cursor: default;
+}
+
+canvas {
+    margin-bottom: 20px;
+}
+
+.legend {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 14px;
+    color: gray;
+}
+
+.legend > * {
+    float: left;
+    margin-left: 20px;
+}
+
+.legend > *:first-of-type {
+    margin-left: 0;
+}
+
+
+.legend > *::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    border-radius: 2px;
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
+}
+
+.legend .humidity::before {
+    background-color: rgb(54, 162, 235);
+}
+
+.legend .temperature::before {
+    background-color: rgb(255, 159, 64);
+}
+
+.legend::after {
+    content: "";
+    display: table;
+    clear: both;
+}
