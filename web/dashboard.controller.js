@@ -1,10 +1,11 @@
 const sqlite3 = require('sqlite3');
 const moment = require('moment');
 const async = require("async");
+const path = require('path');
 
 class DashbordController {
   constructor(app) {
-    this.database = new sqlite3.Database('../db.sqlite3', sqlite3.OPEN_READONLY);
+    this.database = new sqlite3.Database(path.resolve(__dirname + '/../db.sqlite3'), sqlite3.OPEN_READONLY);
 
     app.get('/', this.dashboard.bind(this));
   }
