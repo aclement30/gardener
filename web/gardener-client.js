@@ -42,5 +42,5 @@ app.listen(port, (error) => {
 });
 
 app.get('/vendors/chart.bundle.min.js', function(req, res) {
-  res.sendFile(path.resolve('../node_modules/chart.js/dist/Chart.bundle.min.js'));
+  res.sendFile(path.resolve(__dirname + '/../node_modules/chart.js/dist/Chart.bundle.min.js'));
 });
