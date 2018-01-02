@@ -64,6 +64,7 @@ export class GardenMonitor {
           if (error) {
             GardenMonitor.warning(LOG_TYPE.DB_ERROR, `DB registration error for accessory ${alias}: ${error}`);
             callback(true);
+            return;
           }
 
           callback(false, this.lastID);
