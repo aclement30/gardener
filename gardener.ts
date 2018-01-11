@@ -48,6 +48,6 @@ GardenMonitor.announce(LOG_TYPE.START, ' 🚀  Gardener launched');
 
 // Start controllers
 const controllers = [
-  new GreenhousesController(accessoryManager),
+  //new GreenhousesController(accessoryManager),
   new LightsController(accessoryManager),
 ];

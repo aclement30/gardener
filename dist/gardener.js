@@ -23,8 +23,6 @@ process.on('SIGINT', function () {
         });
     });
 });
-// Controllers
-var greenhouses_controller_1 = require("./controllers/greenhouses.controller");
 var lights_controller_1 = require("./controllers/lights.controller");
 // Init accessory manager
 var accessoryManager = new accessory_manager_1.AccessoryManager();
@@ -37,6 +35,6 @@ homekitBridge.publish();
 garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.START, ' 🚀  Gardener launched');
 // Start controllers
 var controllers = [
-    new greenhouses_controller_1.GreenhousesController(accessoryManager),
+    //new GreenhousesController(accessoryManager),
     new lights_controller_1.LightsController(accessoryManager),
 ];
