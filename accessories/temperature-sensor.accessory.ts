@@ -34,6 +34,7 @@ export class TemperatureSensor extends HAP.Accessory implements GardenAccessory 
   }
 
   shutdown = (callback?: Function): void => {
+    // Input sensor: nothing to shutdown
     if (callback) callback();
   }
 

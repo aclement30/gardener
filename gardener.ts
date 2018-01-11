@@ -1,7 +1,6 @@
 import { AccessoryManager } from './accessory-manager';
 import { HomekitBridge } from './homekit-bridge';
 import { GardenMonitor, LOG_TYPE } from './garden-monitor';
-import GPIO from './gpio/gpio-manager';
 
 // Register listeners for process shutdown
 
@@ -19,7 +18,6 @@ process.on('uncaughtException', (err) => {
 
 process.on('exit', () => {
   GardenMonitor.closeDatabase();
-  GPIO.destroy();
 });
 
 process.on ('SIGINT', () => {
@@ -32,6 +30,7 @@ process.on ('SIGINT', () => {
 });
 
 // Controllers
+import { GreenhousesController } from './controllers/greenhouses.controller';
 import { LightsController } from './controllers/lights.controller';
 
 // Init accessory manager
@@ -49,5 +48,6 @@ GardenMonitor.announce(LOG_TYPE.START, ' 🚀  Gardener launched');
 
 // Start controllers
 const controllers = [
+  new GreenhousesController(accessoryManager),
   new LightsController(accessoryManager),
 ];

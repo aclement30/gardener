@@ -1,22 +1,18 @@
 import { Subject } from 'rxjs/Subject';
 
-import GPIO from '../gpio/gpio-manager';
-import { GpioDevice } from './gpio.device';
-import { GardenAccessory } from '../models/accessory';
+import GpioDevice, { IGpioDevice } from './gpio-device';
 
-export class InputDevice extends GpioDevice {
+export class InputDevice extends (GpioDevice as IGpioDevice) {
 
   value$ = new Subject<any>();
 
-  constructor(pinNumber: number, accessory: GardenAccessory) {
-    super(pinNumber, accessory, GPIO.DIR_IN);
+  constructor(pinNumber: number) {
+    super(pinNumber, { mode: GpioDevice.INPUT, alert: true });
 
-    this._gpio.on('change', this._onGpioValueChange);
+    this.on('alert', this._onGpioValueChange);
   }
 
-  private _onGpioValueChange = (channel: number, value: any) => {
-    if (channel !== this._pinNumber) return;
-
+  private _onGpioValueChange = (value: 0|1) => {
     this.value$.next(value);
   }
 }

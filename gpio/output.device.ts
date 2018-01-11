@@ -1,23 +1,13 @@
-import GPIO from '../gpio/gpio-manager';
-import { GpioDevice } from './gpio.device';
-import { GardenAccessory } from '../models/accessory';
-import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
+import GpioDevice, { IGpioDevice } from './gpio-device';
 
-export class OutputDevice extends GpioDevice {
+export class OutputDevice extends (GpioDevice as IGpioDevice) {
 
-  constructor(pinNumber: number, accessory: GardenAccessory) {
-    super(pinNumber, accessory, GPIO.DIR_OUT);
+  constructor(pinNumber: number) {
+    super(pinNumber, { mode: GpioDevice.OUTPUT });
   }
 
-  setValue(value: boolean, callback?: Function): OutputDevice {
-    this._gpio.write(this._pinNumber, value, (error) => {
-      if (error) {
-        GardenMonitor.warning(LOG_TYPE.WRITE_ERROR, `Error on pin #${this._pinNumber}: ${error}`, this._accessory);
-      }
-
-      if (callback) callback(error);
-    });
-
+  setValue(value: 0|1|boolean): OutputDevice {
+    this.digitalWrite(value);
     return this;
   }
 }

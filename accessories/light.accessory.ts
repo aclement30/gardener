@@ -19,7 +19,7 @@ export class Light extends HAP.Accessory implements GardenAccessory {
   // Override to keep the light turned OFF (has priority over manual override)
   private _emergencyOverride = false;
 
-  constructor(name: string, pinNumber?: number) {
+  constructor(name: string, pinNumber: number) {
     super(name, HAP.uuid.generate(`${namespace}:${name}`));
 
     this.name = name;
@@ -28,13 +28,11 @@ export class Light extends HAP.Accessory implements GardenAccessory {
     this._configureHomekit();
 
     // Init GPIO device
-    this._gpioDevice = new OutputDevice(pinNumber, this).setup((error) => {
-      if (error) return;
+    this._gpioDevice = new OutputDevice(pinNumber);
 
-      this.power$.subscribe((power) => {
-        // Send inverse of value because of the relay connected to the GPIO pin
-        this._gpioDevice.setValue(!power);
-      });
+    this.power$.subscribe((power) => {
+      // Send inverse of value because of the relay connected to the GPIO pin
+      this._gpioDevice.setValue(!power);
     });
   }
 
@@ -95,8 +93,9 @@ export class Light extends HAP.Accessory implements GardenAccessory {
   }
 
   shutdown = (callback?: Function): void => {
-    this._gpioDevice.setValue(false, callback);
+    this._gpioDevice.setValue(false);
     this.power$.next(false);
+    callback();
   }
 
   // Configure Homekit accessory

@@ -24,7 +24,7 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
     this._configureHomekit();
 
     // Init GPIO device
-    this._gpioDevice = new InputDevice(pinNumber, this);
+    this._gpioDevice = new InputDevice(pinNumber);
     this._gpioDevice.value$.subscribe(this._onValueChange);
 
     setInterval(() => {
@@ -38,6 +38,7 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
   }
 
   shutdown = (callback?: Function): void => {
+    // Input sensor: nothing to shutdown
     if (callback) callback();
   }
 
