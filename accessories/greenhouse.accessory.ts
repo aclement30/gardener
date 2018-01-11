@@ -50,10 +50,12 @@ export class Greenhouse extends HAP.Accessory implements GardenAccessory {
   }
 
   open(automated: true): void {
+    if (!this._servo) return;
     this._servo.open(automated);
   }
 
   close(automated: true): void {
+    if (!this._servo) return;
     this._servo.close(automated);
   }
 

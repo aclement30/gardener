@@ -45,9 +45,13 @@ var Greenhouse = /** @class */ (function (_super) {
         return _this;
     }
     Greenhouse.prototype.open = function (automated) {
+        if (!this._servo)
+            return;
         this._servo.open(automated);
     };
     Greenhouse.prototype.close = function (automated) {
+        if (!this._servo)
+            return;
         this._servo.close(automated);
     };
     Greenhouse.prototype.getChildAccessories = function () {
