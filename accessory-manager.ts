@@ -5,7 +5,9 @@ import 'rxjs/add/operator/map';
 import * as async from 'async';
 
 import { GardenAccessory } from './models/accessory';
-import { GardenMonitor } from './garden-monitor';
+import { GardenMonitor, LOG_TYPE } from './garden-monitor';
+import { Greenhouse } from './accessories/greenhouse.accessory';
+import GREENHOUSES_CONFIG from './config/greenhouses';
 
 type GardenAccessoryMap = Map<string, GardenAccessory>;
 
@@ -34,6 +36,19 @@ export class AccessoryManager {
 
     this._accessories.set(alias, accessory);
     this.accessoryAdded$.next(accessory);
+
+    if (accessory instanceof Greenhouse) {
+      // Register child accessories from greenhouse
+      const childAccessories = accessory.getChildAccessories();
+      Object.keys(childAccessories).forEach((childAlias) => {
+        const childAccessory = childAccessories[childAlias];
+        this.addAccessory(`${alias}-${childAlias}`, childAccessory);
+      });
+
+      if (!GREENHOUSES_CONFIG[alias]) {
+        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `No greenhouse config for ${name}`);
+      }
+    }
 
     GardenMonitor.registerAccessory(alias, (error, accessoryId) => {
       if (!error) {

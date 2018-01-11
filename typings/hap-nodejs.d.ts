@@ -33,9 +33,13 @@ declare module 'hap-nodejs' {
 
     // Homekit Types
     static Active: CharacteristicConstructor;
+    static CurrentPosition: CharacteristicConstructor;
     static CurrentRelativeHumidity: CharacteristicConstructor;
     static CurrentTemperature: CharacteristicConstructor;
     static On: CharacteristicConstructor;
+    static PositionState: CharacteristicConstructor;
+    static TargetPosition: CharacteristicConstructor;
+    static WaterLevel: CharacteristicConstructor;
   }
 
   export class Service {
@@ -47,6 +51,7 @@ declare module 'hap-nodejs' {
     static HumiditySensor: ServiceConstructor;
     static Lightbulb: ServiceConstructor;
     static TemperatureSensor: ServiceConstructor;
+    static Window: ServiceConstructor;
   }
 
   export class uuid {
