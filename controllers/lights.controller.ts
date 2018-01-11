@@ -14,8 +14,8 @@ export class LightsController {
   constructor(private accessoryManager: AccessoryManager) {
     this.lights$ = accessoryManager.getByType(Light) as Observable<Map<string, Light>>;
 
-    // Check the status of the lights on every 3 seconds
-    Observable.interval(3000).combineLatest(this.lights$, (time, lights) => (lights))
+    // Check the status of the lights on every minute
+    Observable.interval(60000).combineLatest(this.lights$, (time, lights) => (lights))
       .subscribe(this.handleLights);
   }
 
