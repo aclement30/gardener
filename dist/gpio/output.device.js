@@ -10,25 +10,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var gpio_manager_1 = require("../gpio/gpio-manager");
-var gpio_device_1 = require("./gpio.device");
-var garden_monitor_1 = require("../garden-monitor");
+var gpio_device_1 = require("./gpio-device");
 var OutputDevice = /** @class */ (function (_super) {
     __extends(OutputDevice, _super);
-    function OutputDevice(pinNumber, accessory) {
-        return _super.call(this, pinNumber, accessory, gpio_manager_1["default"].DIR_OUT) || this;
+    function OutputDevice(pinNumber) {
+        return _super.call(this, pinNumber, { mode: gpio_device_1["default"].OUTPUT }) || this;
     }
-    OutputDevice.prototype.setValue = function (value, callback) {
-        var _this = this;
-        this._gpio.write(this._pinNumber, value, function (error) {
-            if (error) {
-                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.WRITE_ERROR, "Error on pin #" + _this._pinNumber + ": " + error, _this._accessory);
-            }
-            if (callback)
-                callback(error);
-        });
+    OutputDevice.prototype.setValue = function (value) {
+        this.digitalWrite(value);
         return this;
     };
     return OutputDevice;
-}(gpio_device_1.GpioDevice));
+}(gpio_device_1["default"]));
 exports.OutputDevice = OutputDevice;

@@ -23,6 +23,7 @@ var HumiditySensor = /** @class */ (function (_super) {
             callback(null, humidity);
         };
         _this.shutdown = function (callback) {
+            // Input sensor: nothing to shutdown
             if (callback)
                 callback();
         };

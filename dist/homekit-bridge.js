@@ -13,13 +13,14 @@ exports.__esModule = true;
 var storage = require("node-persist");
 var HAP = require("hap-nodejs");
 var garden_monitor_1 = require("./garden-monitor");
+var homekit_1 = require("./config/homekit");
 var Accessory = HAP.Accessory;
 var Bridge = HAP.Bridge;
 var uuid = HAP.uuid;
 var HomekitBridge = /** @class */ (function (_super) {
     __extends(HomekitBridge, _super);
     function HomekitBridge(accessoryManager) {
-        var _this = _super.call(this, 'Gardener', uuid.generate("Gardener")) || this;
+        var _this = _super.call(this, homekit_1["default"].name, uuid.generate(homekit_1["default"].name)) || this;
         _this._onAccessoryAdded = function (accessory) {
             _super.prototype.addBridgedAccessory.call(_this, accessory);
         };
@@ -32,12 +33,12 @@ var HomekitBridge = /** @class */ (function (_super) {
         storage.initSync();
         // Publish the Bridge on the local network.
         _super.prototype.publish.call(this, {
-            username: "CC:22:3D:E3:CE:F6",
+            username: homekit_1["default"].username,
             port: 51826,
-            pincode: "031-45-154",
+            pincode: homekit_1["default"].pincode,
             category: Accessory.Categories.BRIDGE
         });
-        garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.HOMEKIT_START, 'Garden accessory bridge is now public on local network');
+        garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.HOMEKIT_START, homekit_1["default"].name + " accessory bridge is now public on local network");
     };
     return HomekitBridge;
 }(Bridge));

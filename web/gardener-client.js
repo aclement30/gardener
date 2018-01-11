@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 
-const port = 80;
+const port = 4000;
 
 // -------------------------------------------------------------------------
 // EXPRESS SETUP

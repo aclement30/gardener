@@ -27,8 +27,8 @@ var LightsController = /** @class */ (function () {
             }
         };
         this.lights$ = accessoryManager.getByType(light_accessory_1.Light);
-        // Check the status of the lights on every 3 seconds
-        Observable_1.Observable.interval(3000).combineLatest(this.lights$, function (time, lights) { return (lights); })
+        // Check the status of the lights on every minute
+        Observable_1.Observable.interval(60000).combineLatest(this.lights$, function (time, lights) { return (lights); })
             .subscribe(this.handleLights);
     }
     LightsController.prototype._toDateTime = function (time) {

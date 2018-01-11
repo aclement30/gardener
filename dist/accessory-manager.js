@@ -5,6 +5,8 @@ var ReplaySubject_1 = require("rxjs/ReplaySubject");
 require("rxjs/add/operator/map");
 var async = require("async");
 var garden_monitor_1 = require("./garden-monitor");
+var greenhouse_accessory_1 = require("./accessories/greenhouse.accessory");
+var greenhouses_1 = require("./config/greenhouses");
 var AccessoryManager = /** @class */ (function () {
     function AccessoryManager() {
         this._accessories = new Map();
@@ -20,10 +22,22 @@ var AccessoryManager = /** @class */ (function () {
         });
     };
     AccessoryManager.prototype.addAccessory = function (alias, accessory) {
+        var _this = this;
         if (this._accessories.has(alias))
             return;
         this._accessories.set(alias, accessory);
         this.accessoryAdded$.next(accessory);
+        if (accessory instanceof greenhouse_accessory_1.Greenhouse) {
+            // Register child accessories from greenhouse
+            var childAccessories_1 = accessory.getChildAccessories();
+            Object.keys(childAccessories_1).forEach(function (childAlias) {
+                var childAccessory = childAccessories_1[childAlias];
+                _this.addAccessory(alias + "-" + childAlias, childAccessory);
+            });
+            if (!greenhouses_1["default"][alias]) {
+                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.SETUP_ERROR, "No greenhouse config for " + name);
+            }
+        }
         garden_monitor_1.GardenMonitor.registerAccessory(alias, function (error, accessoryId) {
             if (!error) {
                 accessory.id = accessoryId;

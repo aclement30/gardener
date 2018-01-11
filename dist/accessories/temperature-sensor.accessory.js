@@ -23,6 +23,7 @@ var TemperatureSensor = /** @class */ (function (_super) {
             callback(null, temperature);
         };
         _this.shutdown = function (callback) {
+            // Input sensor: nothing to shutdown
             if (callback)
                 callback();
         };
