@@ -46,7 +46,7 @@ export class AccessoryManager {
       });
 
       if (!GREENHOUSES_CONFIG[alias]) {
-        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `No greenhouse config for ${name}`);
+        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `No greenhouse config for ${accessory.name}`);
       }
     }
 

@@ -35,7 +35,7 @@ var AccessoryManager = /** @class */ (function () {
                 _this.addAccessory(alias + "-" + childAlias, childAccessory);
             });
             if (!greenhouses_1["default"][alias]) {
-                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.SETUP_ERROR, "No greenhouse config for " + name);
+                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.SETUP_ERROR, "No greenhouse config for " + accessory.name);
             }
         }
         garden_monitor_1.GardenMonitor.registerAccessory(alias, function (error, accessoryId) {
