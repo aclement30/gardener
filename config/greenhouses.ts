@@ -1,14 +1,8 @@
 export default {
-  'greenhouse-right': {
+  'greenhouse': {
     // Minimum humidity level (%)
     minHumidity: 60,
     // Maximum humidity level (%)
-    maxHumidity: 90,
-  },
-  'greenhouse-center': {
-    // Minimum humidity level (%)
-    minHumidity: 60,
-    // Maximum humidity level (%)
-    maxHumidity: 90,
+    maxHumidity: 70,
   },
 }
