@@ -4,6 +4,7 @@ import * as HAP from 'hap-nodejs';
 import { GardenAccessory } from '../models/accessory';
 import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 import { ServoDevice } from '../gpio/servo.device';
+import { AccessoryGroup } from './accessory-group';
 
 export const namespace = 'gardener:accessories:greenhouse-servo';
 
@@ -27,6 +28,7 @@ export class GreenhouseServo extends HAP.Accessory implements GardenAccessory {
 
   public id: number;
   public name: string;
+  public group: AccessoryGroup;
   public currentPosition$: BehaviorSubject<number>;
   public targetPosition$: BehaviorSubject<number>;
   public positionState$: BehaviorSubject<number>;

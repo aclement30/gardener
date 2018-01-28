@@ -4,6 +4,7 @@ import * as HAP from 'hap-nodejs';
 import { GardenAccessory } from '../models/accessory';
 import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
 import { InputDevice } from '../gpio/input.device';
+import { AccessoryGroup } from './accessory-group';
 
 export const namespace = 'gardener:accessories:moisture-sensor';
 
@@ -11,6 +12,7 @@ export class MoistureSensor extends HAP.Accessory implements GardenAccessory {
 
   public id: number;
   public name: string;
+  public group: AccessoryGroup;
   public currentMoisture$: BehaviorSubject<number>;
 
   private _gpioDevice: InputDevice;

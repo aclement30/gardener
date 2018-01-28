@@ -45,7 +45,7 @@ export class DHTSensorDevice {
   private _getSensorValue = () => {
     DHTSensorDriver.read(this._type, this._pinNumber, (error, temperature, humidity) => {
       if (error) {
-        GardenMonitor.warning(LOG_TYPE.READ_ERROR, `DHT sensor reading error on pin #${this._pinNumber}`)
+        GardenMonitor.warning(LOG_TYPE.READ_ERROR, `DHT sensor reading error on pin #${this._pinNumber} (${error})`)
         return;
       }
 

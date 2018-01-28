@@ -6,54 +6,47 @@ import * as async from 'async';
 
 import { GardenAccessory } from './models/accessory';
 import { GardenMonitor, LOG_TYPE } from './garden-monitor';
-import { Greenhouse } from './accessories/greenhouse.accessory';
-import GREENHOUSES_CONFIG from './config/greenhouses';
+import { AccessoryGroup } from './accessories/accessory-group';
+import HOMEKIT_CONFIG from './config/homekit';
 
-type GardenAccessoryMap = Map<string, GardenAccessory>;
+export type GardenAccessoryMap = Map<string, GardenAccessory>;
 
 export class AccessoryManager {
   public accessoryAdded$: ReplaySubject<GardenAccessory>;
   public accessories$: BehaviorSubject<GardenAccessoryMap>;
 
   private _accessories = new Map<string, GardenAccessory>();
+  private _groups = new Map<string, AccessoryGroup>();
 
   constructor() {
     this.accessoryAdded$ = new ReplaySubject();
     this.accessories$ = new BehaviorSubject(this._accessories);
   }
 
-  loadFromConfig(accessoriesList) {
-    GardenMonitor.notice(`Loading ${Object.keys(accessoriesList).length} accessories from config:`);
+  loadFromConfig(accessoryGroups) {
+    GardenMonitor.notice(`Loading accessory groups from config`);
 
-    Object.keys(accessoriesList).forEach((alias) => {
-      const accessory = accessoriesList[alias];
-      this.addAccessory(alias, accessory);
+    Object.keys(accessoryGroups).forEach((groupAlias: string) => {
+      const group: AccessoryGroup = accessoryGroups[groupAlias];
+      this._groups.set(groupAlias, group);
+
+      // Register child accessories from group
+      group.getAccessories().forEach((accessory: GardenAccessory, alias: string) => {
+        this.addAccessory(`${groupAlias}-${alias}`, accessory, group);
+      });
     });
   }
 
-  addAccessory(alias: string, accessory: GardenAccessory) {
+  addAccessory(alias: string, accessory: GardenAccessory, group: AccessoryGroup) {
     if (this._accessories.has(alias)) return;
 
+    accessory.group = group;
     this._accessories.set(alias, accessory);
     this.accessoryAdded$.next(accessory);
-
-    if (accessory instanceof Greenhouse) {
-      // Register child accessories from greenhouse
-      const childAccessories = accessory.getChildAccessories();
-      Object.keys(childAccessories).forEach((childAlias) => {
-        const childAccessory = childAccessories[childAlias];
-        this.addAccessory(`${alias}-${childAlias}`, childAccessory);
-      });
-
-      if (!GREENHOUSES_CONFIG[alias]) {
-        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `No greenhouse config for ${accessory.name}`);
-      }
-    }
 
     GardenMonitor.registerAccessory(alias, (error, accessoryId) => {
       if (!error) {
         accessory.id = accessoryId;
-        GardenMonitor.notice(`+ ${accessory.name}`);
       }
     });
   }
@@ -80,6 +73,16 @@ export class AccessoryManager {
 
   forEach(callback) {
     this._accessories.forEach(callback);
+  }
+
+  publishAccessories(): void {
+    this._groups.forEach((group: AccessoryGroup, alias: string) => {
+      if (HOMEKIT_CONFIG[alias]) {
+        group.publish(HOMEKIT_CONFIG[alias]);
+      } else {
+        GardenMonitor.warning(LOG_TYPE.SETUP_ERROR, `No config for group ${group.name}`);
+      }
+    });
   }
 
   shutdownAll(callback?: Function): void {

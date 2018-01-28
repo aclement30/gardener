@@ -5,43 +5,35 @@ var ReplaySubject_1 = require("rxjs/ReplaySubject");
 require("rxjs/add/operator/map");
 var async = require("async");
 var garden_monitor_1 = require("./garden-monitor");
-var greenhouse_accessory_1 = require("./accessories/greenhouse.accessory");
-var greenhouses_1 = require("./config/greenhouses");
+var homekit_1 = require("./config/homekit");
 var AccessoryManager = /** @class */ (function () {
     function AccessoryManager() {
         this._accessories = new Map();
+        this._groups = new Map();
         this.accessoryAdded$ = new ReplaySubject_1.ReplaySubject();
         this.accessories$ = new BehaviorSubject_1.BehaviorSubject(this._accessories);
     }
-    AccessoryManager.prototype.loadFromConfig = function (accessoriesList) {
+    AccessoryManager.prototype.loadFromConfig = function (accessoryGroups) {
         var _this = this;
-        garden_monitor_1.GardenMonitor.notice("Loading " + Object.keys(accessoriesList).length + " accessories from config:");
-        Object.keys(accessoriesList).forEach(function (alias) {
-            var accessory = accessoriesList[alias];
-            _this.addAccessory(alias, accessory);
+        garden_monitor_1.GardenMonitor.notice("Loading accessory groups from config");
+        Object.keys(accessoryGroups).forEach(function (groupAlias) {
+            var group = accessoryGroups[groupAlias];
+            _this._groups.set(groupAlias, group);
+            // Register child accessories from group
+            group.getAccessories().forEach(function (accessory, alias) {
+                _this.addAccessory(groupAlias + "-" + alias, accessory, group);
+            });
         });
     };
-    AccessoryManager.prototype.addAccessory = function (alias, accessory) {
-        var _this = this;
+    AccessoryManager.prototype.addAccessory = function (alias, accessory, group) {
         if (this._accessories.has(alias))
             return;
+        accessory.group = group;
         this._accessories.set(alias, accessory);
         this.accessoryAdded$.next(accessory);
-        if (accessory instanceof greenhouse_accessory_1.Greenhouse) {
-            // Register child accessories from greenhouse
-            var childAccessories_1 = accessory.getChildAccessories();
-            Object.keys(childAccessories_1).forEach(function (childAlias) {
-                var childAccessory = childAccessories_1[childAlias];
-                _this.addAccessory(alias + "-" + childAlias, childAccessory);
-            });
-            if (!greenhouses_1["default"][alias]) {
-                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.SETUP_ERROR, "No greenhouse config for " + accessory.name);
-            }
-        }
         garden_monitor_1.GardenMonitor.registerAccessory(alias, function (error, accessoryId) {
             if (!error) {
                 accessory.id = accessoryId;
-                garden_monitor_1.GardenMonitor.notice("+ " + accessory.name);
             }
         });
     };
@@ -64,6 +56,16 @@ var AccessoryManager = /** @class */ (function () {
     };
     AccessoryManager.prototype.forEach = function (callback) {
         this._accessories.forEach(callback);
+    };
+    AccessoryManager.prototype.publishAccessories = function () {
+        this._groups.forEach(function (group, alias) {
+            if (homekit_1["default"][alias]) {
+                group.publish(homekit_1["default"][alias]);
+            }
+            else {
+                garden_monitor_1.GardenMonitor.warning(garden_monitor_1.LOG_TYPE.SETUP_ERROR, "No config for group " + group.name);
+            }
+        });
     };
     AccessoryManager.prototype.shutdownAll = function (callback) {
         var accessories = Array.from(this._accessories.values());

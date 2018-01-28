@@ -1,4 +1,3 @@
-import * as HAP from 'hap-nodejs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { GardenAccessory } from '../models/accessory';
@@ -6,30 +5,22 @@ import { HumiditySensor } from './humidity-sensor.accessory';
 import { TemperatureSensor } from './temperature-sensor.accessory';
 import { GreenhouseServo } from './greenhouse-servo.accessory';
 import { GardenMonitor, LOG_TYPE } from '../garden-monitor';
+import { AccessoryGroup } from './accessory-group';
 
-export const namespace = 'gardener:accessories:greenhouse';
+export class Greenhouse extends AccessoryGroup implements GardenAccessory {
 
-export class Greenhouse extends HAP.Accessory implements GardenAccessory {
-
-  public id: number;
-  public name: string;
   public humidity$: BehaviorSubject<number>;
   public coverState$: BehaviorSubject<number>;
 
   private _humiditySensor: HumiditySensor;
   private _temperatureSensor: TemperatureSensor;
   private _servo: GreenhouseServo;
-  private _childAccessories: { [alias: string]: GardenAccessory };
 
-  constructor(name: string, childAccessories: { [alias: string]: GardenAccessory }) {
-    super(name, HAP.uuid.generate(`${namespace}:${name}`));
+  constructor(name: string, accessories: { [alias: string]: GardenAccessory }) {
+    super(name, accessories);
 
-    this.name = name;
-
-    this._childAccessories = childAccessories;
-
-    Object.keys(this._childAccessories).forEach((alias) => {
-      const accessory = this._childAccessories[alias];
+    Object.keys(accessories).forEach((alias) => {
+      const accessory = accessories[alias];
 
       if (accessory instanceof HumiditySensor) {
         this._humiditySensor = accessory;
@@ -57,9 +48,5 @@ export class Greenhouse extends HAP.Accessory implements GardenAccessory {
   close(automated: true): void {
     if (!this._servo) return;
     this._servo.close(automated);
-  }
-
-  getChildAccessories(): { [alias: string]: GardenAccessory } {
-    return this._childAccessories;
   }
 }

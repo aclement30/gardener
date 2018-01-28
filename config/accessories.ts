@@ -2,7 +2,8 @@ import { HumiditySensor } from '../accessories/humidity-sensor.accessory';
 import { Light } from '../accessories/light.accessory';
 import { TemperatureSensor } from '../accessories/temperature-sensor.accessory';
 import { DHTSensorDevice } from "../gpio/dht-sensor";
-import { Greenhouse } from '../accessories/greenhouse.accessory';
+import { AccessoryGroup } from '../accessories/accessory-group';
+import { Greenhouse } from '../accessories/greenhouse';
 
 const globalDHTSensorDevice = new DHTSensorDevice(4, {
   readingInterval: 30,
@@ -21,13 +22,15 @@ const greenhouseDHTSensorDevice = new DHTSensorDevice(23, {
 });
 
 export default {
-  'humidity': new HumiditySensor('Humidité globale', globalDHTSensorDevice),
-  'light-top': new Light('Lumière haut', 11),
-  'light-bottom': new Light('Lumière bas', 13),
-  'temperature': new TemperatureSensor('Température', globalDHTSensorDevice),
-  'greenhouse': new Greenhouse('Miniserre', {
-    'humidity': new HumiditySensor('Miniserre - Humidité', greenhouseDHTSensorDevice),
-    'temperature': new TemperatureSensor('Miniserre - Température', greenhouseDHTSensorDevice),
+  'garden': new AccessoryGroup('Jardin', {
+    'humidity': new HumiditySensor('Humidité globale', globalDHTSensorDevice),
+    'light-top': new Light('Lumière haut', 11),
+    'light-bottom': new Light('Lumière bas', 13),
+    'temperature': new TemperatureSensor('Température', globalDHTSensorDevice),
   }),
-  //'moisture-1': new MoistureSensor('Hum. plante 1'),
+  'greenhouse': new Greenhouse('Miniserre', {
+    'humidity': new HumiditySensor('Humidité', greenhouseDHTSensorDevice),
+    'temperature': new TemperatureSensor('Température', greenhouseDHTSensorDevice),
+    //'moisture-1': new MoistureSensor('Hum. plante 1'),
+  }),
 };

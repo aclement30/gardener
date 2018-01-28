@@ -1,5 +1,4 @@
 import { AccessoryManager } from './accessory-manager';
-import { HomekitBridge } from './homekit-bridge';
 import { GardenMonitor, LOG_TYPE } from './garden-monitor';
 
 // Register listeners for process shutdown
@@ -41,8 +40,7 @@ import accessoriesList from './config/accessories';
 accessoryManager.loadFromConfig(accessoriesList);
 
 // Start Homekit bridge
-const homekitBridge = new HomekitBridge(accessoryManager);
-homekitBridge.publish();
+accessoryManager.publishAccessories();
 
 GardenMonitor.announce(LOG_TYPE.START, ' 🚀  Gardener launched');
 
