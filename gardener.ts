@@ -7,13 +7,13 @@ import { GardenMonitor, LOG_TYPE } from './garden-monitor';
 process.on('uncaughtException', (err) => {
   console.trace(err);
 
+  setTimeout(() => { process.exit(1); }, 1000);
+
   GardenMonitor.announce(LOG_TYPE.SHUTDOWN, ' ❗️  Gardener shutdown with error');
 
   accessoryManager.shutdownAll(() => {
     process.exit (1);
   });
-
-  setTimeout(() => { process.exit(1); }, 1000);
 });
 
 process.on('exit', () => {

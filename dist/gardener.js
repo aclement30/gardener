@@ -6,11 +6,11 @@ var garden_monitor_1 = require("./garden-monitor");
 // Register listeners for process shutdown
 process.on('uncaughtException', function (err) {
     console.trace(err);
+    setTimeout(function () { process.exit(1); }, 1000);
     garden_monitor_1.GardenMonitor.announce(garden_monitor_1.LOG_TYPE.SHUTDOWN, ' ❗️  Gardener shutdown with error');
     accessoryManager.shutdownAll(function () {
         process.exit(1);
     });
-    setTimeout(function () { process.exit(1); }, 1000);
 });
 process.on('exit', function () {
     garden_monitor_1.GardenMonitor.closeDatabase();
