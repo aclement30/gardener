@@ -91,7 +91,12 @@ var GardenMonitor = /** @class */ (function () {
         });
     };
     GardenMonitor.closeDatabase = function () {
-        database.close();
+        try {
+            database.close();
+        }
+        catch (err) {
+            // Do nothing if database is already closed
+        }
     };
     GardenMonitor.debug = function (message, accessory) {
         if (accessory === void 0) { accessory = null; }

@@ -92,7 +92,12 @@ export class GardenMonitor {
   }
 
   static closeDatabase() {
-    database.close();
+    try {
+      database.close();
+    }
+    catch(err) {
+      // Do nothing if database is already closed
+    }
   }
 
   static debug(message: string, accessory: GardenAccessory = null) {
