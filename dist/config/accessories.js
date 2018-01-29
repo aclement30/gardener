@@ -23,8 +23,8 @@ var greenhouseDHTSensorDevice = new dht_sensor_1.DHTSensorDevice(23, {
 exports["default"] = {
     'garden': new accessory_group_1.AccessoryGroup('Jardin', {
         'humidity': new humidity_sensor_accessory_1.HumiditySensor('Humidité globale', globalDHTSensorDevice),
-        'light-top': new light_accessory_1.Light('Lumière haut', 11),
-        'light-bottom': new light_accessory_1.Light('Lumière bas', 13),
+        'light-top': new light_accessory_1.Light('Lumière haut', 17),
+        'light-bottom': new light_accessory_1.Light('Lumière bas', 27),
         'temperature': new temperature_sensor_accessory_1.TemperatureSensor('Température', globalDHTSensorDevice)
     }),
     'greenhouse': new greenhouse_1.Greenhouse('Miniserre', {
