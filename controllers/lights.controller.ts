@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/take';
 
 import { AccessoryManager } from '../accessory-manager';
 import { Light } from '../accessories/light.accessory';
@@ -13,6 +14,9 @@ export class LightsController {
 
   constructor(private accessoryManager: AccessoryManager) {
     this.lights$ = accessoryManager.getByType(Light) as Observable<Map<string, Light>>;
+
+    // Initial setup
+    this.lights$.take(1).subscribe(this.handleLights);
 
     // Check the status of the lights on every minute
     Observable.interval(60000).combineLatest(this.lights$, (time, lights) => (lights))
