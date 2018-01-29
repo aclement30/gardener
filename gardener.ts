@@ -3,12 +3,29 @@ import { GardenMonitor, LOG_TYPE } from './garden-monitor';
 
 // Register listeners for process shutdown
 
+process.on('uncaughtException', (err) => {
+  console.trace(err);
+
+  setTimeout(() => { process.exit(1); }, 1000);
+
+  GardenMonitor.announce(LOG_TYPE.SHUTDOWN, ' ❗️  Gardener shutdown with error');
+
+  accessoryManager.shutdownAll(() => {
+    process.exit (1);
+  });
+});
+
 process.on('exit', () => {
   GardenMonitor.closeDatabase();
 });
 
 process.on ('SIGINT', () => {
-  GardenMonitor.closeDatabase();
+  GardenMonitor.announce(LOG_TYPE.STOP, ' 🛑  Gardener stopped', () => {
+    GardenMonitor.closeDatabase();
+    accessoryManager.shutdownAll(() => {
+      process.exit (0);
+    });
+  });
 });
 
 // Controllers
