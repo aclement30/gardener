@@ -2,7 +2,7 @@
 exports.__esModule = true;
 exports["default"] = {
     // Time of day when lights are turned ON (HH:mm)
-    lightingUpTime: '07:00',
+    lightingUpTime: '06:00',
     // Time of day when lights are turned OFF (HH:mm)
-    lightingDownTime: '22:00'
+    lightingDownTime: '23:00'
 };
